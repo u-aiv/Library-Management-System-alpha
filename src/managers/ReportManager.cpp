@@ -1,4 +1,4 @@
-// ReportManager.cpp Implementation
+// ReportManager.cpp 实现
 
 #include "ReportManager.h"
 #include "../utils/DateUtils.h"
@@ -9,7 +9,7 @@
 #include <unordered_map>
 #include <utility>
 
-// Constructor
+// 构造函数
 ReportManager::ReportManager(const std::string& bookPath,
                              const std::string& memberPath,
                              const std::string& transactionPath,
@@ -23,7 +23,7 @@ ReportManager::ReportManager(const std::string& bookPath,
     reloadAll();
 }
 
-// Reload all datas
+// 重新加载所有数据
 void ReportManager::reloadAll() {
     bookManager.reload();
     memberManager.reload();
@@ -31,13 +31,13 @@ void ReportManager::reloadAll() {
     reservationManager.reload();
 }
 
-// Splicing path
+// 拼接路径
 std::string ReportManager::joinPath(const std::string& dir, const std::string& file) const {
     if (dir.empty()) {
         return file;
     }
 
-    // Handle "/" and "\"
+    // 处理 "/" 和 "\"
     std::string result = dir;
     if (result.back() != '/' && result.back() != '\\') {
         result += '/';
@@ -45,9 +45,9 @@ std::string ReportManager::joinPath(const std::string& dir, const std::string& f
     return result + file;
 }
 
-// Construct report file name
+// 构造报告文件名
 std::string ReportManager::buildReportFileName(const std::string& prefix) const {
-    // Generate filename with timestamp: prefix_YYYYMMDD_HHMMSS.txt
+    // 以时间戳生成文件名: prefix_YYYYMMDD_HHMMSS.txt
     time_t currentTime = DateUtils::getCurrentTimestamp();
     std::string currentDate = DateUtils::getCurrentDate();
     tm * timeInfo = localtime(&currentTime);
@@ -63,57 +63,57 @@ std::string ReportManager::buildReportFileName(const std::string& prefix) const 
     return oss.str();
 }
 
-// write csv lines
+// 写入 CSV 行
 bool ReportManager::writeLines(const std::string& filePath, const std::vector<std::string>& lines) const {
     try {
         FileHandler fileHandler;
         fileHandler.writeCSV(filePath, lines);
         return true;
     } catch (const std::exception& e) {
-        throw std::runtime_error("Failed to write report" + std::string(e.what()));
+        throw std::runtime_error("写入报告失败" + std::string(e.what()));
     }
 }
 
 std::vector<std::string> ReportManager::buildSummaryReport() const {
     std::vector<std::string> lines;
 
-    // Title
+    // 标题
     lines.emplace_back("================================================");
-    lines.emplace_back("         LIBRARY MANAGEMENT SYSTEM REPORT       ");
-    lines.emplace_back("                 SUMMARY REPORT                 ");
+    lines.emplace_back("                  图书馆管理系统报告                     ");
+    lines.emplace_back("                  总   结   报   告                 ");
     lines.emplace_back("================================================");
     lines.emplace_back("");
 
-    // Date
+    // 日期
     std::string currentDate = DateUtils::getCurrentDate();
-    lines.emplace_back("Report Generated: " + currentDate);
+    lines.emplace_back("报告生成: " + currentDate);
     lines.emplace_back("");
 
-    // Book Statistics
-    lines.emplace_back("--- Book Statistics --- ");
-    lines.emplace_back("Total Books in Library: " + std::to_string(bookManager.getTotalBooks()));
-    lines.emplace_back("Available Number: " + std::to_string(bookManager.getAvailableCount()));
-    lines.emplace_back("Borrowed Books: " + std::to_string(bookManager.getTotalBooks() - bookManager.getAvailableCount()));
+    // 书目统计
+    lines.emplace_back("--- 书目统计 --- ");
+    lines.emplace_back("馆藏书总数: " + std::to_string(bookManager.getTotalBooks()));
+    lines.emplace_back("可用数: " + std::to_string(bookManager.getAvailableCount()));
+    lines.emplace_back("借出数: " + std::to_string(bookManager.getTotalBooks() - bookManager.getAvailableCount()));
     lines.emplace_back("");
 
-    // Member Statistics
-    lines.emplace_back("--- Member Statistics ---");
-    lines.emplace_back("Total Members in Library: " + std::to_string(memberManager.getTotalMembers()));
-    lines.emplace_back("Admin members: " + std::to_string(memberManager.getAdminCount()));
-    lines.emplace_back("Regular members: " + std::to_string(memberManager.getTotalMembers() - memberManager.getAdminCount()));
+    // 会员统计
+    lines.emplace_back("--- 会员统计 ---");
+    lines.emplace_back("馆内会员总数: " + std::to_string(memberManager.getTotalMembers()));
+    lines.emplace_back("管理员数: " + std::to_string(memberManager.getAdminCount()));
+    lines.emplace_back("常规用户: " + std::to_string(memberManager.getTotalMembers() - memberManager.getAdminCount()));
     lines.emplace_back("");
 
-    // Transaction Statistics
-    lines.emplace_back("--- Transaction Statistics ---");
-    lines.emplace_back("Total Transactions in Library: " + std::to_string(transactionManager.getTotalTransactions()));
-    lines.emplace_back("Active Transactions: " + std::to_string(transactionManager.getActiveTransactionsCount()));
-    lines.emplace_back("Overdue Transactions: " + std::to_string(transactionManager.getOverdueTransactionsCount()));
+    // 交易统计
+    lines.emplace_back("--- 交易统计 ---");
+    lines.emplace_back("馆内交易总数: " + std::to_string(transactionManager.getTotalTransactions()));
+    lines.emplace_back("有效交易数: " + std::to_string(transactionManager.getActiveTransactionsCount()));
+    lines.emplace_back("逾期交易数: " + std::to_string(transactionManager.getOverdueTransactionsCount()));
     lines.emplace_back("");
 
-    // Reservation Statistics
-    lines.emplace_back("--- Reservation Statistics ---");
-    lines.emplace_back("Total Reservations: " + std::to_string(reservationManager.getTotalReservations()));
-    lines.emplace_back("Active Reservations: " + std::to_string(reservationManager.getActiveReservations()));
+    // 预约统计
+    lines.emplace_back("--- 预约统计 ---");
+    lines.emplace_back("总预约数: " + std::to_string(reservationManager.getTotalReservations()));
+    lines.emplace_back("有效预约数: " + std::to_string(reservationManager.getActiveReservations()));
     lines.emplace_back("");
 
     lines.emplace_back("================================================");
@@ -124,23 +124,23 @@ std::vector<std::string> ReportManager::buildSummaryReport() const {
 std::vector<std::string> ReportManager::buildInventoryReport() const{
     std::vector<std::string> lines;
 
-    // Title
+    // 标题
     lines.emplace_back("================================================");
-    lines.emplace_back("         LIBRARY MANAGEMENT SYSTEM REPORT       ");
-    lines.emplace_back("                 INVENTORY REPORT               ");
+    lines.emplace_back("                  图书馆管理系统报告                     ");
+    lines.emplace_back("                  库   存   报   告                 ");
     lines.emplace_back("================================================");
     lines.emplace_back("");
 
-    // Date
+    // 日期
     std::string currentDate = DateUtils::getCurrentDate();
-    lines.emplace_back("Report Generated: " + currentDate);
+    lines.emplace_back("报告生成: " + currentDate);
     lines.emplace_back("");
 
-    // Head
+    // 表头
     lines.emplace_back("ISBN          | Title                    | Author          | Total | Available");
     lines.emplace_back("--------------|--------------------------|-----------------|-------|----------|");
 
-    // Book Details
+    // 书籍详细信息
     auto allBooks = bookManager.getAllBooks();
     for (const auto& book : allBooks) {
         std::string truncatedTitle = book.getTitle();
@@ -159,8 +159,8 @@ std::vector<std::string> ReportManager::buildInventoryReport() const{
     }
 
     lines.emplace_back("");
-    lines.emplace_back("Total Books: " + std::to_string(bookManager.getTotalBooks()));
-    lines.emplace_back("Available Books: " + std::to_string(bookManager.getAvailableCount()));
+    lines.emplace_back("总数: " + std::to_string(bookManager.getTotalBooks()));
+    lines.emplace_back("可用数: " + std::to_string(bookManager.getAvailableCount()));
     lines.emplace_back("");
     lines.emplace_back("================================================");
 
@@ -170,23 +170,23 @@ std::vector<std::string> ReportManager::buildInventoryReport() const{
 std::vector<std::string> ReportManager::buildMemberReport() const {
     std::vector<std::string> lines;
 
-    // Title
+    // 标题
     lines.emplace_back("================================================");
-    lines.emplace_back("         LIBRARY MANAGEMENT SYSTEM REPORT       ");
-    lines.emplace_back("                 MEMBER REPORT                  ");
+    lines.emplace_back("                  图书馆管理系统报告                     ");
+    lines.emplace_back("                  会   员   报   告                 ");
     lines.emplace_back("================================================");
     lines.emplace_back("");
 
-    // Date
+    // 日期
     std::string currentDate = DateUtils::getCurrentDate();
-    lines.emplace_back("Report Generated: " + currentDate);
+    lines.emplace_back("报告生成: " + currentDate);
     lines.emplace_back("");
 
-    // Head
+    // 表头
     lines.emplace_back("Member ID | Name                 | Phone Number | Registration Date | Expiry Date");
     lines.emplace_back("----------|----------------------|--------------|-------------------|-----------");
 
-    // Member Details
+    // 会员信息
     auto allMembers = memberManager.getAllMembers();
     for (const auto& member : allMembers) {
         std::ostringstream oss;
@@ -200,8 +200,8 @@ std::vector<std::string> ReportManager::buildMemberReport() const {
     }
 
     lines.emplace_back("");
-    lines.emplace_back("Total Members: " + std::to_string(memberManager.getTotalMembers()));
-    lines.emplace_back("Admin Accounts: " + std::to_string(memberManager.getAdminCount()));
+    lines.emplace_back("总数: " + std::to_string(memberManager.getTotalMembers()));
+    lines.emplace_back("管理员数: " + std::to_string(memberManager.getAdminCount()));
     lines.emplace_back("");
     lines.emplace_back("================================================");
 
@@ -214,26 +214,26 @@ std::vector<std::string> ReportManager::buildTransactionReport(int topN) const {
     }
     std::vector<std::string> lines;
 
-    // Title
+    // 标题
     lines.emplace_back("================================================");
-    lines.emplace_back("         LIBRARY MANAGEMENT SYSTEM REPORT       ");
-    lines.emplace_back("               TRANSACTION REPORT               ");
+    lines.emplace_back("                  图书馆管理系统报告                     ");
+    lines.emplace_back("                  交   易   报   告                 ");
     lines.emplace_back("================================================");
     lines.emplace_back("");
 
-    // Date
+    // 日期
     std::string currentDate = DateUtils::getCurrentDate();
-    lines.emplace_back("Report Generated: " + currentDate);
+    lines.emplace_back("报告生成: " + currentDate);
     lines.emplace_back("");
 
-    // Head
+    // 表头
     lines.emplace_back("Transaction ID | Member ID |     ISBN      | Borrow Date | Due Date   | Returned | Fine");
     lines.emplace_back("---------------|-----------|---------------|-------------|------------|----------|-----");
 
-    // Transaction Details
+    // 交易信息
     auto allTransactions = transactionManager.getAllTransactions();
 
-    // Partial sort by borrow date (descending) to get recent transactions
+    // 按借阅日期（降序）部分排序以获取最近的交易
     std::vector<const Transaction*> transactionPtrs;
     transactionPtrs.reserve(allTransactions.size());
     for (const auto& trans : allTransactions) {
@@ -273,9 +273,9 @@ std::vector<std::string> ReportManager::buildTransactionReport(int topN) const {
     }
 
     lines.emplace_back("");
-    lines.emplace_back("Total Transactions: " + std::to_string(transactionManager.getTotalTransactions()));
-    lines.emplace_back("Active Transactions: " + std::to_string(transactionManager.getActiveTransactionsCount()));
-    lines.emplace_back("Overdue Transactions: " + std::to_string(transactionManager.getOverdueTransactionsCount()));
+    lines.emplace_back("总交易数: " + std::to_string(transactionManager.getTotalTransactions()));
+    lines.emplace_back("活动交易数: " + std::to_string(transactionManager.getActiveTransactionsCount()));
+    lines.emplace_back("逾期交易数: " + std::to_string(transactionManager.getOverdueTransactionsCount()));
     lines.emplace_back("");
     lines.emplace_back("================================================");
 
@@ -285,23 +285,23 @@ std::vector<std::string> ReportManager::buildTransactionReport(int topN) const {
 std::vector<std::string> ReportManager::buildReservationReport() const {
     std::vector<std::string> lines;
 
-    // Title
+    // 标题
     lines.emplace_back("================================================");
-    lines.emplace_back("         LIBRARY MANAGEMENT SYSTEM REPORT       ");
-    lines.emplace_back("              RESERVATION REPORT                ");
+    lines.emplace_back("                  图书馆管理系统报告                     ");
+    lines.emplace_back("                  预   约   报   告                 ");
     lines.emplace_back("================================================");
     lines.emplace_back("");
 
-    // Date
+    // 日期
     std::string currentDate = DateUtils::getCurrentDate();
     lines.emplace_back("Report Generated: " + currentDate);
     lines.emplace_back("");
 
-    // Head
+    // 表头
     lines.emplace_back("Reservation ID | Member ID |     ISBN     | Reservation Date | Status");
     lines.emplace_back("---------------|-----------|--------------|------------------|--------");
 
-    // Reservation Details
+    // 预约信息
     auto allReservations = reservationManager.getAllReservations();
     for (const auto& res : allReservations) {
         std::ostringstream oss;
@@ -315,8 +315,8 @@ std::vector<std::string> ReportManager::buildReservationReport() const {
     }
     
     lines.emplace_back("");
-    lines.emplace_back("Total Reservations: " + std::to_string(reservationManager.getTotalReservations()));
-    lines.emplace_back("Active Reservations: " + std::to_string(reservationManager.getActiveReservations()));
+    lines.emplace_back("总预约数: " + std::to_string(reservationManager.getTotalReservations()));
+    lines.emplace_back("有效预约数: " + std::to_string(reservationManager.getActiveReservations()));
     lines.emplace_back("");
     lines.emplace_back("================================================");
     
@@ -329,19 +329,19 @@ std::vector<std::string> ReportManager::buildTopBorrowedBooksReport(int topN) co
     }
     std::vector<std::string> lines;
 
-    // Title
+    // 标题
     lines.emplace_back("================================================");
-    lines.emplace_back("         LIBRARY MANAGEMENT SYSTEM REPORT       ");
-    lines.emplace_back("            TOP BORROWED BOOKS REPORT           ");
+    lines.emplace_back("                  图书馆管理系统报告                     ");
+    lines.emplace_back("                  热   书   报   告                 ");
     lines.emplace_back("================================================");
     lines.emplace_back("");
 
-    // Date
+    // 日期
     std::string currentDate = DateUtils::getCurrentDate();
     lines.emplace_back("Report Generated: " + currentDate);
     lines.emplace_back("");
 
-    // Count borrow frequency by ISBN
+    // 按 ISBN 统计借阅频率
     std::unordered_map<std::string, int> borrowCount;
     auto allTransactions = transactionManager.getAllTransactions();
 
@@ -349,14 +349,14 @@ std::vector<std::string> ReportManager::buildTopBorrowedBooksReport(int topN) co
         borrowCount[transaction.getISBN()]++;
     }
 
-    // Convert to vector and sort
+    // 转换为向量并排序
     std::vector<std::pair<std::string, int> > sortedBorrows(borrowCount.begin(), borrowCount.end());
     std::sort(sortedBorrows.begin(), sortedBorrows.end(),
         [](const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) {
             return a.second > b.second;
         });
 
-    // Head
+    // 表头
     lines.emplace_back("Rank | ISBN       | Title                    | Author          | Borrow Count");
     lines.emplace_back("-----|------------|--------------------------|-----------------|-------------");
 
@@ -366,7 +366,7 @@ std::vector<std::string> ReportManager::buildTopBorrowedBooksReport(int topN) co
 
         auto book = const_cast<BookManager&>(bookManager).findBookByISBN(pair.first);
         if (book) {
-            // Check if book title truncated
+            // 检查书目标题是否被截断
             std::string truncatedTitle = book->getTitle();
             if (truncatedTitle.length() > 24){
                 truncatedTitle = truncatedTitle.substr(0, 21) + "...";

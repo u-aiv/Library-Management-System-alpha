@@ -5,14 +5,14 @@
 
 class Reservation {
 private:
-    std::string reservationID;          // Reservation ID (auto generated)
-    std::string memberID;               // Member's ID who reserved
-    std::string isbn;                   // Book's ISBN which is reserved
-    std::string reservationDate;        // Reservation Date
-    bool isActive{};                    // Is available?
+    std::string reservationID;          // 预约 ID
+    std::string memberID;               // 预约者 ID
+    std::string isbn;                   // 被预约书 ISBN
+    std::string reservationDate;        // 预约日期
+    bool isActive{};                    // 预约有效标记
 
 public:
-    // Constructor
+    // 构造函数
     Reservation(std::string reservationID, std::string memberID, std::string isbn,
                 std::string reservationDate, bool isActive = true) :
                 reservationID(std::move(reservationID)), memberID(std::move(memberID)),
@@ -20,17 +20,17 @@ public:
                 isActive(isActive){}
     Reservation() = default;
 
-    // Getters and Setters
+    // 获取器和设置器
     std::string getReservationID() const;
     std::string getMemberID() const;
     std::string getISBN() const;
     std::string getReservationDate() const;
     bool getIsActive() const;
 
-    // Business Logic
+    // 业务逻辑
     void cancelReservation();
 
-    // Utility
+    // 实用方法
     std::string toCSV() const;
     static Reservation fromCSV(const std::string& csvLine);
 };

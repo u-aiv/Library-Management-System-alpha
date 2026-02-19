@@ -1,4 +1,4 @@
-// Member.h Instance
+// Member.h 实现
 
 #include <sstream>
 #include "Member.h"

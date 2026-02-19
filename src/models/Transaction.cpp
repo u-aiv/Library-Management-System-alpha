@@ -1,4 +1,4 @@
-// Transaction.h Instance
+// Transaction.h 实现
 
 #include "Transaction.h"
 #include "../utils/DateUtils.h"
@@ -73,7 +73,7 @@ void Transaction::returnBook() {
     returnDate = DateUtils::getCurrentDate();
     isReturned = true;
     if (fine > 0) {
-        std::cout << "You are overdue! Please pay the fine: $" << fine << std::endl;
+        std::cout << "您已逾期! 请支付罚款: $" << fine << std::endl;
     }
 }
 

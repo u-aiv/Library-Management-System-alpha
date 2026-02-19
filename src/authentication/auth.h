@@ -4,13 +4,13 @@
 #include <string>
 
 namespace auth {
-// MAX length limit of password
+// 密码最大长度
 constexpr size_t MAX_PASSWORD_LENGTH = 64;
 
-// Hash the password for secure storage
+// 哈希加密密码以安全存储
 std::string hashPassword(const std::string& password);
 
-// Verify the password
+// 验证密码
 bool verifyPassword(const std::string& password, const std::string& storedHash);
 }
 

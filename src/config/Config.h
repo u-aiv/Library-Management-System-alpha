@@ -6,14 +6,14 @@
 
 class Config {
 public:
-    // Singleton pattern
+    // 单例方法
     static Config& getInstance();
 
-    // Copy Denied
+    // 禁止复制
     Config(const Config&) = delete;
     Config& operator=(const Config&) = delete;
 
-    // File path
+    // 文件路径
     static const std::string DATA_DIR;
     static const std::string BOOKS_FILE;
     static const std::string MEMBERS_FILE;
@@ -22,28 +22,28 @@ public:
     static const std::string SETTINGS_FILE;
     static const std::string REPORTS_DIR;
 
-    // Book genres
+    // 书目种类
     static const std::string GENRES[5];
     static constexpr int GENRES_COUNT = 5;
 
-    // Borrowing policies
+    // 借阅规则
     static constexpr int DEFAULT_BORROW_DAYS = 14;
     static constexpr int RENEWAL_DAYS = 7;
-    static constexpr int MAX_RENEWALS = 2;      // Max 30 days total (14 + 7 + 7)
+    static constexpr int MAX_RENEWALS = 2;      // 最大共 30 天
     static constexpr int MAX_TOTAL_BORROW_DAYS = 30;
 
-    // Member settings
+    // 成员设置
     static constexpr int DEFAULT_MAX_BOOKS = 2;
     static constexpr int ADMIN_MAX_RENEWALS = 10;
-    static constexpr int MEMBERSHIP_DURATION_DAYS = 365 * 4;  // 4 years
+    static constexpr int MEMBERSHIP_DURATION_DAYS = 365 * 4;  // 默认 4 年期限
     static constexpr int MIN_MAX_BOOKS = 1;
     static constexpr int MAX_MAX_BOOKS = 10;
 
-    // Fine settings
+    // 罚款设置
     static const double FINE_PER_DAY;
     static const double MAX_FINE;
 
-    // Validation rules
+    // 验证规则
     static constexpr int ISBN_LENGTH = 13;
     static constexpr int PHONE_LENGTH = 10;
     static constexpr int MIN_TITLE_LENGTH = 1;
@@ -55,78 +55,78 @@ public:
     static constexpr int MIN_PUBLISHER_LENGTH = 1;
     static constexpr int MAX_PUBLISHER_LENGTH = 100;
 
-    // ID prefixes
+    // ID 前缀
     static const std::string MEMBER_ID_PREFIX;
     static const std::string ADMIN_ID_PREFIX;
     static const std::string TRANSACTION_ID_PREFIX;
     static const std::string RESERVATION_ID_PREFIX;
 
-    // ID formatting
+    // ID 格式
     static constexpr int MEMBER_ID_NUMBER_WIDTH = 8;  // e.g. M20261001
     static constexpr int TRANSACTION_ID_NUMBER_WIDTH = 10;  // e.g. T2026100001
     static constexpr int RESERVATION_ID_NUMBER_WIDTH = 10;  // e.g. R2026100001
 
-    // Date format
+    // 日期格式
     static const std::string DATE_FORMAT;  // YYYY-MM-DD
 
-    // CSV settings
+    // CSV 设置
     static constexpr char CSV_DELIMITER = ',';
-    static constexpr char CSV_LIST_DELIMITER = ';';  // For lists within a field
+    static constexpr char CSV_LIST_DELIMITER = ';';  // 用于字段内的列表
 
-    // UI settings
+    // UI 设置
     static constexpr int UI_BOX_WIDTH = 50;
     static constexpr char UI_HORIZONTAL_CHAR = '=';
     static constexpr char UI_VERTICAL_CHAR = '|';
     static constexpr char UI_CORNER_CHAR = '+';
 
-    // Default password for new members (should be changed on first login)
+    // 新用户的默认密码
     static const std::string DEFAULT_PASSWORD;
 
-    // System messages
+    // 系统消息
     static const std::string SUCCESS_MESSAGE_PREFIX;
     static const std::string ERROR_MESSAGE_PREFIX;
     static const std::string WARNING_MESSAGE_PREFIX;
     static const std::string INFO_MESSAGE_PREFIX;
 
-    // Load and save settings
+    // 加载和保存设置
     void loadSettings();
     void saveSettings();
 
-    // Getters for configurable settings (can be changed at runtime)
+    // 可配置的设置获取器 (可在运行时被修改)
     bool isAdvancedUIMode() const;
     int getBorrowPeriodDays() const;
     double getFinePerDay() const;
     double getMaxFine() const;
     int getDefaultMaxBooks() const;
 
-    // Setters for configurable settings
+    // 可配置的设置设置器
     void setAdvancedUIMode(bool enabled);
     void setBorrowPeriodDays(int days);
     void setFinePerDay(double fine);
     void setMaxFine(double fine);
     void setDefaultMaxBooks(int maxBooks);
 
-    // Utility methods
+    // 实用方法
     static bool isValidGenre(const std::string& genre);
     static std::string formatMemberID(int number);
     static std::string formatTransactionID(int number);
     static std::string formatReservationID(int number);
 
 private:
-    // Private constructor for singleton
+    // 单例的私有构造函数
     Config();
 
-    // Runtime configurable settings
+    // 运行时可配置设置
     bool advancedUIMode;
     int borrowPeriodDays;
     double finePerDay;
     double maxFine;
     int defaultMaxBooks;
 
-    // Settings storage
+    // 设置存储
     std::unordered_map<std::string, std::string> settings;
 
-    // Helper methods
+    // 辅助方法
     void initializeDefaults();
 
     void parseSettingsLine(const std::string &line);

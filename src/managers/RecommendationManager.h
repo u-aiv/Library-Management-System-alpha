@@ -35,7 +35,7 @@ public:
         const std::string& memberPath = "../data/members.csv",
         const std::string& transactionPath = "../data/transactions.csv");
 
-    // KNN-based recommendations (collaborative filtering) with content/popularity fallback
+    // 基于KNN的推荐(协同过滤), 配有内容/热门度回退机制
     std::vector<Book> recommendForMember(
         const std::string& memberID,
         int topN = 5,

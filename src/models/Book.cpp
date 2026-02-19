@@ -1,4 +1,4 @@
-// Book.h Instance
+// Book.h 实现
 
 #include "Book.h"
 #include <fstream>
@@ -32,7 +32,7 @@ bool Book::canBorrow() const {
 
 void Book::borrowBook() {
     if (availableCopies <= 0) {
-        std::cout << "ERROR: No copies available to borrow!" << std::endl;
+        std::cout << "错误：没有可借阅的副本!" << std::endl;
         return;
     }
     availableCopies--;
@@ -40,7 +40,7 @@ void Book::borrowBook() {
 
 void Book::returnBook() {
     if (availableCopies >= totalCopies) {
-        std::cout << "ERROR: Cannot return more books than total copies!" << std::endl;
+        std::cout << "错误：归还的书籍数量不能超过总库存!" << std::endl;
         return;
     }
     availableCopies++;

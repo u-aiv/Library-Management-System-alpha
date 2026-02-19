@@ -9,18 +9,18 @@
 
 class Member {
 private:
-    std::string memberID;                       // Member Identification Digits
-    std::string name;                           // Member's Name
-    std::string phoneNumber;                    // Member's Phone Number
-    std::vector<std::string> preference;        // Member's Preference Genres (MAX 5)
-    std::string registrationDate;               // Member's Registration Date (YYYY-MM-DD)(UTC)
-    std::string expiryDate;                     // Member's Expiry Date (YYYY-MM-DD)(UTC)
-    int maxBooksAllowed{};                      // Member's max limit of books borrowed (Default 2)
-    bool isAdmin{};                             // true = admin, false = member
-    std::string passwordHash;                   // for authentication
+    std::string memberID;                       // 会员 ID
+    std::string name;                           // 会员姓名
+    std::string phoneNumber;                    // 会员手机号码
+    std::vector<std::string> preference;        // 会员偏好类别
+    std::string registrationDate;               // 会员注册日 (YYYY-MM-DD)
+    std::string expiryDate;                     // 会员过期日 (YYYY-MM-DD)
+    int maxBooksAllowed{};                      // 会员最多可借阅的书籍数量(默认 2 本)
+    bool isAdmin{};                             // true = 管理员, false = 会员
+    std::string passwordHash;                   // 用于验证
 
 public:
-    // Constructor
+    // 构造函数
     Member(std::string memberID, std::string name, std::string phoneNumber,
         std::vector<std::string> preference, std::string registrationDate, std::string expiryDate,
         int maxBooksAllowed = 2, bool isAdmin = false, std::string passwordHash = ""):
@@ -30,7 +30,7 @@ public:
         isAdmin(isAdmin), passwordHash(std::move(passwordHash)) {}
     Member() = default;
 
-    // Getters and Setters
+    // 获取器和设置器
     std::string getMemberID() const;
     std::string getName() const;
     std::string getPhoneNumber() const;
@@ -43,7 +43,7 @@ public:
     int getMaxBooksAllowed() const;
     bool authenticate(const std::string& password) const;
 
-    // CSV function
+    // CSV 函数
     std::string toCSV() const;
     static Member fromCSV(const std::string& csvLine);
 };

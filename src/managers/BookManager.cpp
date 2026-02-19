@@ -1,4 +1,4 @@
-// BookManager.h Instance
+// BookManager.h 实现
 
 #include "BookManager.h"
 #include "../utils/FileHandler.h"
@@ -6,7 +6,7 @@
 #include <iostream>
 #include <utility>
 
-// Constructor
+// 构造函数
 BookManager::BookManager(const std::string& filePath)
     : filePath(filePath), fileHandler() {
 
@@ -20,7 +20,7 @@ BookManager::BookManager(const std::string& filePath)
     loadFromFile();
 }
 
-// private: Helper: Load books data from file
+// 私有：助手：从文件加载书籍数据
 void BookManager::loadFromFile() {
     books.clear();
 
@@ -39,13 +39,13 @@ void BookManager::loadFromFile() {
     }
 }
 
-// private: Helper: Save books data to file
+// 私有：助手：向文件保存书籍数据
 void BookManager::saveToFile() {
     std::vector<std::string> lines;
 
     lines.emplace_back("ISBN,Title,Author,Publisher,Genre,TotalCopies,AvailableCopies,IsReserved");
 
-    // Add all books
+    // 添加全部书目
     for (const auto& book : books) {
         lines.push_back(book.toCSV());
     }
@@ -57,16 +57,16 @@ void BookManager::saveToFile() {
     }
 }
 
-// private: Helper: Check autoSave flag to decide whether need to save
+// 私有：辅助：检查自动保存标志决定是否需要保存
 void BookManager::saveIfNeeded() {
     if (autoSave) {
         saveToFile();
     }
 }
 
-// Add a new book
+// 新增一本书
 bool BookManager::addBook(const Book& book) {
-    // Check if ISBN already exists
+    // 检查 ISBN 是否已存在
     if (isISBNExists(book.getISBN())) {
         return false;
     }
@@ -75,7 +75,7 @@ bool BookManager::addBook(const Book& book) {
     return true;
 }
 
-// Delete book by ISBN
+// 以 ISBN 删除一本书
 bool BookManager::deleteBook(const std::string& isbn) {
     auto it = std::find_if(books.begin(), books.end(),
         [&](const Book& book) { return book.getISBN() == isbn; });
@@ -88,7 +88,7 @@ bool BookManager::deleteBook(const std::string& isbn) {
     return false;
 }
 
-// Update existing bool
+// 更新现有图书
 bool BookManager::updateBook(const Book& book) {
     Book *existingBook = findBookByISBN(book.getISBN());
 
@@ -100,7 +100,7 @@ bool BookManager::updateBook(const Book& book) {
     return true;
 }
 
-// Find book by ISBN
+// 以 ISBN 查找一本书
 Book* BookManager::findBookByISBN(const std::string &isbn) {
     for (auto& book : books) {
         if (book.getISBN() == isbn) {
@@ -110,9 +110,9 @@ Book* BookManager::findBookByISBN(const std::string &isbn) {
     return nullptr;
 }
 
-// Find books Template
-// matchMode = 0 --> exact matching (case-sensitive) (default)
-// matchMode = 1 --> fuzzy matching (case-insensitive)
+// 书籍查找模板
+// matchMode = 0 --> 精确查找 (区分大小写) (默认)
+// matchMode = 1 --> 模糊查找 (统一大小写)
 template<typename Getter>
 std::vector<const Book*> findByField(
     const std::vector<Book>& books,
@@ -121,7 +121,7 @@ std::vector<const Book*> findByField(
     int matchMode = 0
     ) {
         if (matchMode != 0 && matchMode != 1) {
-            throw std::runtime_error("Invalid match mode");
+            throw std::runtime_error("无效匹配码");
         }
 
         std::vector<const Book*> results;
@@ -148,27 +148,27 @@ std::vector<const Book*> findByField(
         return results;
 }
 
-// Find book by title
+// 以标题查找书
 std::vector<const Book*> BookManager::findByTitle(const std::string& title, int matchMode) const {
     return findByField(books, title,&Book::getTitle , matchMode);
 }
 
-// Find book by author
+// 以作者查找书
 std::vector<const Book*> BookManager::findByAuthor(const std::string& author, int matchMode) const {
     return findByField(books, author, &Book::getAuthor, matchMode);
 }
 
-// Find book by publisher
+// 以出版社查找书
 std::vector<const Book*> BookManager::findByPublisher(const std::string& publisher, int matchMode) const {
     return findByField(books, publisher, &Book::getPublisher, matchMode);
 }
 
-// Find book by genre
+// 以类型查找书
 std::vector<const Book*> BookManager::findByGenre(const std::string& genre, int matchMode) const {
     return findByField(books, genre, &Book::getGenre, matchMode);
 }
 
-// Find available book
+// 查找可用书目
 std::vector<const Book*> BookManager::findAvailableBooks() const {
     std::vector<const Book*> results;
 
@@ -180,16 +180,16 @@ std::vector<const Book*> BookManager::findAvailableBooks() const {
     return results;
 }
 
-// Borrow a book
+// 借一本书
 bool BookManager::borrowBook(const std::string& isbn) {         // -> TransactionManager
     auto* book = findBookByISBN(isbn);
 
     if (book == nullptr) {
-        return false;       // Book not found
+        return false;       // 书未找到
     }
 
     if (!book->canBorrow()) {
-        return false;       // Book unavailable
+        return false;       // 书不可用
     }
 
     book->borrowBook();
@@ -197,12 +197,12 @@ bool BookManager::borrowBook(const std::string& isbn) {         // -> Transactio
     return true;
 }
 
-// Return a book
+// 还一本书
 bool BookManager::returnBook(const std::string& isbn) {         // -> TransactionManager
     auto* book = findBookByISBN(isbn);
 
     if (book == nullptr) {
-        return false;       // Book not found
+        return false;       // 书未找到
     }
 
     book->returnBook();
@@ -210,17 +210,17 @@ bool BookManager::returnBook(const std::string& isbn) {         // -> Transactio
     return true;
 }
 
-// Get all books
+// 获取所有书目
 std::vector<Book> BookManager::getAllBooks() const {
     return books;
 }
 
-// Get total number of books
+// 获取书目总数量
 int BookManager::getTotalBooks() const {
     return static_cast<int>(books.size());
 }
 
-// Get count of available books
+// 获取可用书目数量
 int BookManager::getAvailableCount() const {
     int count = 0;
     for (const auto& book : books) {
@@ -231,23 +231,23 @@ int BookManager::getAvailableCount() const {
     return count;
 }
 
-// Reload from file
+// 重新加载文件
 void BookManager::reload() {
     loadFromFile();
 }
 
-// Clear file handler cache
+// 清除文件处理者缓存
 void BookManager::clearCache() {
     fileHandler.clearCache();
 }
 
-// Check if ISBN exists
+// 检查如果 ISBN 存在
 bool BookManager::isISBNExists(const std::string& isbn) const {
     return std::find_if(books.begin(), books.end(),
         [&](const Book& book) { return book.getISBN() == isbn; }) != books.end();
 }
 
-// Batch Operations (RAII)
+// 批量操作 (RAII)
 void BookManager::setAutoSave(bool enable) {
     autoSave = enable;
 }
@@ -276,7 +276,7 @@ BookManager::BatchOperation::~BatchOperation() {
         bookManager->saveToFile();
         bookManager->setAutoSave(originalAutoSave);
     } catch (...) {
-        std::cerr << "Error when trying to save book during batch operations." << std::endl;
+        std::cerr << "在批量操作过程中尝试保存书籍时出错" << std::endl;
     }
 }
 

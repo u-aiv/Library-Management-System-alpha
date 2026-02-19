@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-// Forward declarations to avoid extra includes in header
+// 前向声明
 class MemberManager;
 class BookManager;
 
@@ -16,34 +16,34 @@ private:
     std::string filePath;
     FileHandler fileHandler;
 
-    // Data Persistence
+    // 数据持久化
     void loadFromFile();
     void saveToFile();
 
-    // For Batch Operations
+    // 用于批量操作
     bool autoSave = true;
     void setAutoSave(bool enable = true);
     bool isAutoSaveEnabled() const;
 
-    // Helper: Check autoSave flag to decide whether need to save
+    // 助手: 检查自动保存标志决定是否需要保存
     void saveIfNeeded();
 
-    // Helper: Generate Transaction ID
+    // 助手: 生成交易 ID
     std::string generateTransactionID() const;
 
-    // Helper: Count active transactions for a member
+    // 助手: 对一位会员计算其活跃交易数
     int getActiveCountForMember(const std::string& memberID) const;
 
 public:
-    // Constructor
+    // 构造函数
     explicit TransactionManager(const std::string& filePath = "../data/transactions.csv");
 
-    // CRUD
+    // CRUD 操作 (增删查改)
     bool addTransaction(const Transaction& transaction);
     bool updateTransaction(const Transaction& transaction);
     bool deleteTransaction(const std::string& transactionID);
 
-    // Search Functions
+    // 搜索函数
     Transaction* findByTransactionID(const std::string& transactionID);
     std::vector<const Transaction*> findByMemberID(const std::string& memberID);
     std::vector<const Transaction*> findByISBN(const std::string& isbn);
@@ -53,7 +53,7 @@ public:
     std::vector<const Transaction*> findActiveTransactions();
     std::vector<const Transaction*> findOverdueTransactions();
 
-    // Transaction Functions
+    // 交易函数
     std::string borrowBook(const std::string& memberID, const std::string& isbn);
     std::string borrowBook(MemberManager& memberManager, BookManager& bookManager,
                            const std::string& memberID, const std::string& isbn);
@@ -64,23 +64,23 @@ public:
     bool renewBook(const std::string& transactionID);
     bool renewBook(const std::string& memberID, const std::string& isbn);
 
-    // History & Reports
+    // 历史 & 报告
     std::vector<const Transaction*> getMemberHistory(const std::string& memberID);
     std::vector<const Transaction*> getActiveTransactions(const std::string& memberID);
     std::vector<const Transaction*> getOverdueTransactions();
 
-    // Getters
+    // 获取器
     const std::vector<Transaction>& getAllTransactions() const;
     int getTotalTransactions() const;
     int getActiveTransactionsCount() const;
     int getOverdueTransactionsCount() const;
 
-    // Utility
-    void reload();          // Reload from file
-    void clearCache();      // Clear file handler cache
+    // 实用方法
+    void reload();          // 重新加载文件
+    void clearCache();      // 清除文件处理器缓存
     bool isTransactionIDExists(const std::string& transactionID) const;
 
-    // Batch Operation (RAII)
+    // 批量操作 (RAII)
     class BatchOperation {
     private:
         TransactionManager* transactionManager;

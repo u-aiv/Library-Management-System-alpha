@@ -3,7 +3,7 @@ project(Library_Management_System)
 
 set(CMAKE_CXX_STANDARD 11)
 
-#find_package(OpenSSL REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 add_executable(Library_Management_System
         src/main.cpp
@@ -27,8 +27,8 @@ add_executable(Library_Management_System
         src/main.cpp
 )
 
-#target_link_libraries(Library_Management_System
-#        PRIVATE
-#        OpenSSL::SSL
-#        OpenSSL::Crypto
-#)
+target_link_libraries(Library_Management_System
+        PRIVATE
+        OpenSSL::SSL
+        OpenSSL::Crypto
+)

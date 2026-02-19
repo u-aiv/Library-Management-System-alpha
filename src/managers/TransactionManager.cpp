@@ -1,4 +1,4 @@
-// TransactionManager.cpp Implementation
+// TransactionManager.cpp 实现
 
 #include "TransactionManager.h"
 #include "BookManager.h"
@@ -11,7 +11,7 @@
 #include <iostream>
 #include <sstream>
 
-// Constructor
+// 构造函数
 TransactionManager::TransactionManager(const std::string& filePath)
     : filePath(filePath), fileHandler() {
 
@@ -25,14 +25,14 @@ TransactionManager::TransactionManager(const std::string& filePath)
     loadFromFile();
 }
 
-// private: Helper: Load transaction data from file
+// 私有: 助手: 从文件加载交易数据
 void TransactionManager::loadFromFile() {
     transactions.clear();
 
     try {
         auto lines = fileHandler.readCSV(filePath);
 
-        // Skip header (line 1)
+        // 跳过表头(第一行)
         for (size_t i = 1; i < lines.size(); i++) {
             if (!lines[i].empty()) {
                 transactions.push_back(Transaction::fromCSV(lines[i]));
@@ -44,13 +44,13 @@ void TransactionManager::loadFromFile() {
     }
 }
 
-// private: Helper: Save transaction data to file
+// 私有: 助手: 将交易数据保存到文件
 void TransactionManager::saveToFile() {
     std::vector<std::string> lines;
 
     lines.emplace_back("TransactionID,MemberID,ISBN,BorrowDate,DueDate,ReturnDate,RenewCount,Fine,IsReturned");
 
-    // Add all transactions
+    // 添加所有交易
     for (const auto& transaction : transactions) {
         lines.push_back(transaction.toCSV());
     }
@@ -62,7 +62,7 @@ void TransactionManager::saveToFile() {
     }
 }
 
-// private: Helper: Check autoSave flag to decide whether need to save
+// 私有: 辅助: 设置自动保存标志
 void TransactionManager::setAutoSave(bool enable) {
     autoSave = enable;
 }
@@ -71,14 +71,14 @@ bool TransactionManager::isAutoSaveEnabled() const {
     return autoSave;
 }
 
-// Helper: Check autoSave flag to decide whether need to save
+// 助手: 检查自动保存标志决定是否需要保存
 void TransactionManager::saveIfNeeded() {
     if (autoSave) {
         saveToFile();
     }
 }
 
-// private: Helper: Generate Transaction ID
+// 私有: 辅助: 生成交易 ID
 std::string TransactionManager::generateTransactionID() const {
     std::string currentDate = DateUtils::getCurrentDate();
     std::string year = currentDate.substr(0, 4);
@@ -123,9 +123,9 @@ int TransactionManager::getActiveCountForMember(const std::string& memberID) con
     return count;
 }
 
-// Add a new Transaction
+// 新增一条交易
 bool TransactionManager::addTransaction(const Transaction& transaction) {
-    // Check if TransactionID already exists
+    // 检查交易ID是否已存在
     if (isTransactionIDExists(transaction.getTransactionID())) {
         return false;
     }
@@ -134,7 +134,7 @@ bool TransactionManager::addTransaction(const Transaction& transaction) {
     return true;
 }
 
-// Update existing transaction
+// 更新现有交易
 bool TransactionManager::updateTransaction(const Transaction& transaction) {
     Transaction *existingTransaction = findByTransactionID(transaction.getTransactionID());
 
@@ -146,7 +146,7 @@ bool TransactionManager::updateTransaction(const Transaction& transaction) {
     return true;
 }
 
-// Delete transaction by transactionID
+// 以交易 ID 删除交易
 bool TransactionManager::deleteTransaction(const std::string& transactionID) {
     auto it = std::find_if(transactions.begin(), transactions.end(),
         [&](const Transaction& trans) { return trans.getTransactionID() == transactionID; });
@@ -159,7 +159,7 @@ bool TransactionManager::deleteTransaction(const std::string& transactionID) {
     return false;
 }
 
-// Find transaction by transactionID
+// 以交易 ID 查找交易
 Transaction* TransactionManager::findByTransactionID(const std::string& transactionID) {
     for (auto& transaction : transactions) {
         if (transaction.getTransactionID() == transactionID) {
@@ -169,7 +169,7 @@ Transaction* TransactionManager::findByTransactionID(const std::string& transact
     return nullptr;
 }
 
-// Find transactions by memberID
+// 以会员 ID 查找交易
 std::vector<const Transaction*> TransactionManager::findByMemberID(const std::string& memberID) {
     std::vector<const Transaction*> results;
 
@@ -181,7 +181,7 @@ std::vector<const Transaction*> TransactionManager::findByMemberID(const std::st
     return results;
 }
 
-// Find transactions by ISBN
+// 以 ISBN 查找交易
 std::vector<const Transaction*> TransactionManager::findByISBN(const std::string& isbn) {
     std::vector<const Transaction*> results;
 
@@ -193,7 +193,7 @@ std::vector<const Transaction*> TransactionManager::findByISBN(const std::string
     return results;
 }
 
-// Find transactions by BorrowDate
+// 以借出日查找交易
 std::vector<const Transaction*> TransactionManager::findByBorrowDate(const std::string& borrowDate) {
     std::vector<const Transaction*> results;
 
@@ -205,7 +205,7 @@ std::vector<const Transaction*> TransactionManager::findByBorrowDate(const std::
     return results;
 }
 
-// Find transactions by DueDate
+// 以到期日查找交易
 std::vector<const Transaction*> TransactionManager::findByDueDate(const std::string& dueDate) {
     std::vector<const Transaction*> results;
 
@@ -217,7 +217,7 @@ std::vector<const Transaction*> TransactionManager::findByDueDate(const std::str
     return results;
 }
 
-// Find transactions by ReturnDate
+// 以归还日查找交易
 std::vector<const Transaction*> TransactionManager::findByReturnDate(const std::string& returnDate) {
     std::vector<const Transaction*> results;
 
@@ -229,7 +229,7 @@ std::vector<const Transaction*> TransactionManager::findByReturnDate(const std::
     return results;
 }
 
-// Find active transactions
+// 查找有效交易
 std::vector<const Transaction*> TransactionManager::findActiveTransactions() {
     std::vector<const Transaction*> results;
 
@@ -241,7 +241,7 @@ std::vector<const Transaction*> TransactionManager::findActiveTransactions() {
     return results;
 }
 
-// Find overdue transactions
+// 查找逾期交易
 std::vector<const Transaction*> TransactionManager::findOverdueTransactions() {
     std::vector<const Transaction*> results;
 
@@ -253,7 +253,7 @@ std::vector<const Transaction*> TransactionManager::findOverdueTransactions() {
     return results;
 }
 
-// Borrow a book
+// 借一本书
 std::string TransactionManager::borrowBook(const std::string& memberID, const std::string& isbn) {
     MemberManager memberManager(Config::MEMBERS_FILE);
     Member* member = memberManager.findMemberByID(memberID);
@@ -319,7 +319,7 @@ std::string TransactionManager::borrowBook(MemberManager& memberManager, BookMan
     return transactionID;
 }
 
-// Return a book with transactionID
+// 以交易 ID 归还一本书
 bool TransactionManager::returnBook(const std::string& transactionID) {
     Transaction* transaction = findByTransactionID(transactionID);
     if (transaction == nullptr || transaction->haveReturned()) {
@@ -351,7 +351,7 @@ bool TransactionManager::returnBook(BookManager& bookManager, const std::string&
     return true;
 }
 
-// Return a book with memberID and ISBN
+// 以会员 ID 和 ISBN 归还一本书
 bool TransactionManager::returnBook(const std::string& memberID, const std::string& isbn) {
     const Transaction *transaction = nullptr;
     for (const auto& t : transactions) {
@@ -388,7 +388,7 @@ bool TransactionManager::returnBook(BookManager& bookManager, const std::string&
     return returnBook(bookManager, transaction->getTransactionID());
 }
 
-// Renew a book with transactionID
+// 以交易 ID 续约一本书
 bool TransactionManager::renewBook(const std::string& transactionID) {
     Transaction* transaction = findByTransactionID(transactionID);
     if (transaction == nullptr || transaction->haveReturned()) {
@@ -422,12 +422,12 @@ bool TransactionManager::renewBook(const std::string& memberID, const std::strin
     return renewBook(transaction->getTransactionID());
 }
 
-// Get member borrowing history
+// 获取会员交易历史
 std::vector<const Transaction*> TransactionManager::getMemberHistory(const std::string& memberID) {
     return findByMemberID(memberID);
 }
 
-// Get active transactions for a member
+// 获取一位会员的有效交易
 std::vector<const Transaction*> TransactionManager::getActiveTransactions(const std::string& memberID) {
     std::vector<const Transaction*> results;
     for (const auto& transaction : transactions) {
@@ -438,22 +438,22 @@ std::vector<const Transaction*> TransactionManager::getActiveTransactions(const 
     return results;
 }
 
-// Get all overdue transactions
+// 获取所有逾期交易
 std::vector<const Transaction*> TransactionManager::getOverdueTransactions() {
     return findOverdueTransactions();
 }
 
-// Get all transactions
+// 获取所有交易
 const std::vector<Transaction>& TransactionManager::getAllTransactions() const {
     return transactions;
 }
 
-// Get total number of transactions
+// 获取交易总数
 int TransactionManager::getTotalTransactions() const {
     return static_cast<int>(transactions.size());
 }
 
-// Get count of active transactions
+// 获取活跃交易数
 int TransactionManager::getActiveTransactionsCount() const {
     int count = 0;
     for (const auto& transaction : transactions) {
@@ -464,7 +464,7 @@ int TransactionManager::getActiveTransactionsCount() const {
     return count;
 }
 
-// Get count of overdue transactions
+// 获取逾期交易数
 int TransactionManager::getOverdueTransactionsCount() const {
     int count = 0;
     for (const auto& transaction : transactions) {
@@ -475,23 +475,23 @@ int TransactionManager::getOverdueTransactionsCount() const {
     return count;
 }
 
-// Reload from file
+// 重新加载文件
 void TransactionManager::reload() {
     loadFromFile();
 }
 
-// Clear file handler cache
+// 清除文件处理器缓存
 void TransactionManager::clearCache() {
     fileHandler.clearCache();
 }
 
-// Check if TransactionID exists
+// 检查交易 ID 是否存在
 bool TransactionManager::isTransactionIDExists(const std::string& transactionID) const {
     return std::find_if(transactions.begin(), transactions.end(),
         [&](const Transaction& transaction) { return transaction.getTransactionID() == transactionID; }) != transactions.end();
 }
 
-// Batch Operations (RAII)
+// 批量操作 (RAII)
 TransactionManager::BatchOperation::BatchOperation(TransactionManager& tmgr) :
                     transactionManager(&tmgr), originalAutoSave(tmgr.autoSave), active(true) {
     tmgr.setAutoSave(false);
@@ -512,7 +512,7 @@ TransactionManager::BatchOperation::~BatchOperation() {
         transactionManager->saveToFile();
         transactionManager->setAutoSave(originalAutoSave);
     } catch (...) {
-        std::cerr << "Error when trying to save transactions during batch operations." << std::endl;
+        std::cerr << "在批量操作期间尝试保存交易时出错" << std::endl;
     }
 }
 

@@ -1,4 +1,4 @@
-// auth.h instance
+// auth.cpp 实现
 // Use PKCS5_PBKDF2
 
 #include "auth.h"
@@ -32,13 +32,13 @@ std::vector<unsigned char> hexToBytes(const std::string& hex) {
 
 std::string hashPassword(const std::string& password) {
     if (password.length() > MAX_PASSWORD_LENGTH) {
-        throw std::runtime_error("Password is too long!(No more than 64 characters)");
+        throw std::runtime_error("密码过长!(应少于 64 个字符)");
     }
 
     std::vector<unsigned char> salt(16);
     if (!RAND_bytes(salt.data(),
                     static_cast<int>(salt.size()))) {
-        throw std::runtime_error("Failed to generate salt!");
+        throw std::runtime_error("生成盐值失败!");
     }
 
     std::vector<unsigned char> hash(32);
@@ -50,7 +50,7 @@ std::string hashPassword(const std::string& password) {
                            EVP_sha256(),
                            static_cast<int>(hash.size()),
                            hash.data())) {
-        throw std::runtime_error("Hashing password failed!");
+        throw std::runtime_error("密码哈希计算失败!");
     }
 
     return bytesToHex(salt) + bytesToHex(hash);
@@ -71,7 +71,7 @@ bool verifyPassword(const std::string& password, const std::string& storedHash) 
                            static_cast<int>(password.length()),
                            salt.data(),
                            static_cast<int>(salt.size()),
-                           100000,         // Number of iterations
+                           100000,         // 迭代次数
                            EVP_sha256(),
                            static_cast<int>(hash.size()),
                            hash.data())) {

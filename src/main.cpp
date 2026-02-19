@@ -1,5 +1,4 @@
 // main.cpp
-// Library Management System entry point (Using C++11)
 
 #include "config/Config.h"
 #include "authentication/auth.h"
@@ -31,7 +30,7 @@ namespace {
 
 bool ensureWorkingDirHasData() {
     FileHandler fileHandler;
-    // Find data
+    // 找寻数据
     for (int i = 0; i < 4; ++i) {
         if (fileHandler.isFileExist(Config::BOOKS_FILE) &&
             fileHandler.isFileExist(Config::MEMBERS_FILE) &&
@@ -49,7 +48,7 @@ bool ensureWorkingDirHasData() {
 }
 
 void setupConsoleEnvironment() {
-    // using UTF-8
+    // 采用 UTF-8
     std::setlocale(LC_ALL, "");
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
@@ -65,7 +64,7 @@ void ensureSeedMembers(MemberManager& memberManager) {
     const std::string today = DateUtils::getCurrentDate();
     const std::string expiry = DateUtils::addDays(today, 365 * 4);
 
-    // Default admin and member when first-launch
+    // 首次启动时的默认管理员和成员
     const Member admin(
         "A20261001",
         "System Admin",
@@ -99,7 +98,7 @@ void ensureSeedBooks(BookManager& bookManager) {
         return;
     }
 
-    // Sample Books for test
+    // 测试样例用书
     const std::vector<Book> sampleBooks = {
         Book("9787020002207", "Dream of the Red Chamber", "Cao Xueqin", "People's Literature", "Fiction", 5, 5, false),
         Book("9787544253994", "The Three-Body Problem", "Liu Cixin", "Chongqing Press", "Science", 4, 4, false),
@@ -124,13 +123,13 @@ int main() {
     try {
         setupConsoleEnvironment();
 
-        // Make sure the working directory points to data/
+        // 确保工作目录指向 data/
         ensureWorkingDirHasData();
 
         Config& config = Config::getInstance();
         config.loadSettings();
 
-        // write a default configuration if settings are empty,
+        // 如果设置为空, 则写入默认配置
         config.saveSettings();
 
         BookManager bookManager(Config::BOOKS_FILE);
@@ -150,10 +149,10 @@ int main() {
             : UI::DisplayMode::SIMPLE;
         UI ui(mode);
 
-        ui.displayHeader("Library Management System", "C++11 Console Edition");
-        ui.displayMessage("Default admin: A20261001 / admin123", UI::MessageType::INFO);
-        ui.displayMessage("Default member: M20261001 / user123", UI::MessageType::INFO);
-        ui.pause("Press any key to continue...");
+        ui.displayHeader("图书馆管理系统", "C++11 控制台版本");
+        ui.displayMessage("初始管理员: A20261001 / admin123", UI::MessageType::INFO);
+        ui.displayMessage("初始会员: M20261001 / user123", UI::MessageType::INFO);
+        ui.pause("按任意键继续...");
 
         MenuHandler menuHandler(
             bookManager,
@@ -169,7 +168,7 @@ int main() {
     } catch (const std::exception& e) {
         std::cerr << "[FATAL] " << e.what() << std::endl;
     } catch (...) {
-        std::cerr << "[FATAL] Unknown error occurred." << std::endl;
+        std::cerr << "[FATAL] 遇到未知错误" << std::endl;
     }
 
     return 1;

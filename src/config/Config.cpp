@@ -1,4 +1,4 @@
-// Config.cpp Implementation
+// Config.cpp 实现
 
 #include "Config.h"
 #include <sstream>
@@ -6,7 +6,7 @@
 #include <iomanip>
 #include <algorithm>
 
-// File paths initialization
+// 初始化文件路径
 const std::string Config::DATA_DIR = "../data/";
 const std::string Config::BOOKS_FILE = "../data/books.csv";
 const std::string Config::MEMBERS_FILE = "../data/members.csv";
@@ -15,7 +15,7 @@ const std::string Config::RESERVATIONS_FILE = "../data/reservations.csv";
 const std::string Config::SETTINGS_FILE = "../data/settings.csv";
 const std::string Config::REPORTS_DIR = "../reports/";
 
-// Book genres
+// 书目类型
 const std::string Config::GENRES[5] = {
     "Fiction",
     "Non-Fiction",
@@ -24,41 +24,41 @@ const std::string Config::GENRES[5] = {
     "Biography"
 };
 
-// Fine settings
+// 文件设置
 const double Config::FINE_PER_DAY = 2.0;
 const double Config::MAX_FINE = 14.0;
 
-// ID prefixes
+// ID 前缀
 const std::string Config::MEMBER_ID_PREFIX = "M";
 const std::string Config::ADMIN_ID_PREFIX = "A";
 const std::string Config::TRANSACTION_ID_PREFIX = "T";
 const std::string Config::RESERVATION_ID_PREFIX = "R";
 
-// Date format
+// 日期格式
 const std::string Config::DATE_FORMAT = "YYYY-MM-DD";
 
-// Default password
+// 默认密码
 const std::string Config::DEFAULT_PASSWORD = "defaultpassword";
 
-// System messages
+// 系统消息
 const std::string Config::SUCCESS_MESSAGE_PREFIX = "[SUCCESS] ";
 const std::string Config::ERROR_MESSAGE_PREFIX = "[ERROR] ";
 const std::string Config::WARNING_MESSAGE_PREFIX = "[WARNING] ";
 const std::string Config::INFO_MESSAGE_PREFIX = "[INFO] ";
 
-// Get the singleton instance of Config
+// 获取 Config 的单例实例
 Config& Config::getInstance() {
     static Config instance;
     return instance;
 }
 
-// Constructor
+// 构造函数
 Config::Config() {
     initializeDefaults();
 }
 
 void Config::initializeDefaults() {
-    advancedUIMode = false;         // Set to simple menu mode on first launch
+    advancedUIMode = false;         // 首次启动设置为简单 UI 样式
     borrowPeriodDays = DEFAULT_BORROW_DAYS;
     finePerDay = FINE_PER_DAY;
     maxFine = MAX_FINE;
@@ -67,12 +67,12 @@ void Config::initializeDefaults() {
 
 void Config::loadSettings() {
     std::ifstream ifs(SETTINGS_FILE);
-    if (!ifs.is_open()) {       // File doesn't exist, use defaults
+    if (!ifs.is_open()) {       // 文件不存在则使用初始路径
         return;
     }
 
     std::string line;
-    if (std::getline(ifs, line)) {      // Skip the header line
+    if (std::getline(ifs, line)) {      // 跳过头行
         while (std::getline(ifs, line)) {
             parseSettingsLine(line);
         }
@@ -81,7 +81,7 @@ void Config::loadSettings() {
 }
 
 void Config::parseSettingsLine(const std::string& line) {
-    if (line.empty() || line[0] == '#') {       // Skip empty lines and comments
+    if (line.empty() || line[0] == '#') {       // 跳过空行和注释
         return;
     }
 
@@ -89,16 +89,16 @@ void Config::parseSettingsLine(const std::string& line) {
     std::string key, value;
 
     if (std::getline(ss, key, CSV_DELIMITER) && std::getline(ss, value)) {
-        // Trim whitespace
+        // 修剪空白
         key.erase(0, key.find_first_not_of(" \t\r\n"));
         key.erase(key.find_last_not_of(" \t\r\n") + 1);
         value.erase(0, value.find_first_not_of(" \t\r\n"));
         value.erase(value.find_last_not_of(" \t\r\n") + 1);
 
-        // Store value in settings map
+        // 将值存储在设置中
         settings[key] = value;
 
-        // Apply specific settings
+        // 应用特定设置
         if (key == "AdvancedUIMode") {
             advancedUIMode = (value == "1" || value == "true" || value == "True");
         } else if (key == "BorrowPeriodDays") {
@@ -108,7 +108,7 @@ void Config::parseSettingsLine(const std::string& line) {
                     borrowPeriodDays = days;
                 }
             } catch (...){
-                // Invalid value, keep defaults
+                // 无效值返回默认
             }
         } else if (key == "FinePerDay") {
             try {
@@ -117,7 +117,7 @@ void Config::parseSettingsLine(const std::string& line) {
                     finePerDay = fine;
                 }
             } catch (...) {
-                // Invalid value, keep defaults
+                // 无效值返回默认
             }
         } else if (key == "MaxFine") {
             try {
@@ -126,7 +126,7 @@ void Config::parseSettingsLine(const std::string& line) {
                     maxFine = fine;
                 }
             } catch (...) {
-                // Invalid value, keep defaults
+                // 无效值返回默认
             }
         } else if (key == "DefaultMaxBooks") {
             try {
@@ -135,7 +135,7 @@ void Config::parseSettingsLine(const std::string& line) {
                     defaultMaxBooks = maxBooks;
                 }
             } catch (...) {
-                // Invalid value, keep defaults
+                // 无效值返回默认
             }
         }
     }
@@ -145,14 +145,14 @@ void Config::saveSettings() {
     std::ofstream ofs(SETTINGS_FILE);
 
     if (!ofs.is_open()) {
-        // Cannot open file for writing
+        // 打开文件错误
         return;
     }
 
-    // Write header
+    // 写入文件头
     ofs << "Setting,Value" << std::endl;
 
-    // Write settings
+    // 写入设置
     ofs << "AdvancedUIMode," << (advancedUIMode ? "1" : "0") << std::endl;
     ofs << "BorrowPeriodDays," << borrowPeriodDays << std::endl;
     ofs << "FinePerDay," << std::fixed << std::setprecision(2) << finePerDay << std::endl;
@@ -162,7 +162,7 @@ void Config::saveSettings() {
     ofs.close();
 }
 
-// Getters for configurable settings
+// 可配置设置的获取器
 bool Config::isAdvancedUIMode() const {
     return advancedUIMode;
 }
@@ -211,7 +211,7 @@ void Config::setDefaultMaxBooks(int maxBooks) {
     }
 }
 
-// Utility methods
+// 实用方法
 bool Config::isValidGenre(const std::string &genre) {
     for (const auto & g : GENRES) {
         if (g == genre) {

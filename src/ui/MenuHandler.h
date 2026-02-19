@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-// Forward declarations to avoid circular dependencies
+// 前向声明
 class BookManager;
 class MemberManager;
 class TransactionManager;
@@ -17,7 +17,7 @@ class UI;
 
 class MenuHandler {
 private:
-    // Manager references
+    // 管理器引用
     BookManager& bookManager;
     MemberManager& memberManager;
     TransactionManager& transactionManager;
@@ -25,16 +25,16 @@ private:
     RecommendationManager& recommendationManager;
     UI& ui;
 
-    // Current user session
+    // 当前用户会话
     Member* currentUser;
     bool isRunning;
 
-    // Menu display helpers
+    // 菜单显示助手
     void displayWelcomeScreen();
     void displayMemberMenu();
     void displayAdminMenu();
 
-    // Member menu handlers
+    // 会员菜单处理器
     void handleSearchBooks();
     void handleBorrowBook();
     void handleReturnBook();
@@ -45,7 +45,7 @@ private:
     void handleViewReservations();
     void handleViewProfile();
 
-    // Admin menu handlers
+    // 管理员菜单处理器
     void handleManageBooks();
     void handleManageMembers();
     void handleManageTransactions();
@@ -55,51 +55,51 @@ private:
     void handleBackupRestore();
     void handleSystemSettings();
 
-    // Sub-menu handlers for admin - books
+    // 管理员子菜单处理 - 书籍
     void handleAddBook();
     void handleUpdateBook();
     void handleDeleteBook();
     void handleViewAllBooks();
 
-    // Sub-menu handlers for admin - members
+    // 管理员子菜单处理 - 会员
     void handleAddMember();
     void handleUpdateMember();
     void handleSearchReservations();
     void handleDeleteMember();
     void handleViewAllMembers();
 
-    // Sub-menu handlers for admin - transactions
+    // 管理员子菜单处理 - 交易
     void handleViewAllTransactions();
     void handleViewActiveTransactions();
     void handleManualReturn();
 
-    // Sub-menu handlers for admin - reservations
+    // 管理员子菜单处理 - 预约
     void handleAddReservation();
     void handleUpdateReservation();
     void handleDeleteReservation();
     void handleViewAllReservation();
     void handleViewActiveReservation();
 
-    // Sub-menu handlers for admin - recommendations
+    // 管理员子菜单处理 - 推荐
     void handleViewRecommendations();
 
-    // Sub-menu handlers for admin - reports
+    // 管理员子菜单处理 - 报告
     void handleGenerateInventoryReport();
     void handleGenerateMemberReport();
     void handleGenerateTransactionReport();
     void handleGenerateOverdueReport();
     void handleGenerateStatisticsReport();
 
-    // Sub-menu handlers for admin - backup/restore
+    // 管理员子菜单处理 - 备份/恢复
     void handleBackupData();
     void handleRestoreData();
 
-    // Sub-menu handlers for admin - system settings
+    // 管理员子菜单处理 - 系统设置
     void handleChangeUIMode();
     void handleChangeBorrowPeriod();
     void handleChangeFineSettings();
 
-    // Utility functions
+    // 实用方法
     std::string promptForInput(const std::string& prompt, bool canCancel = true);
     int promptForInt(const std::string& prompt, int min, int max, bool canCancel = true);
     double promptForDouble(const std::string& prompt, bool canCancel = true);
@@ -108,18 +108,18 @@ private:
     void pauseScreen();
     void clearScreen();
 
-    // Search helpers
+    // 搜索助手
     void performBookSearch(const std::string& searchType);
     void displaySearchResults(const std::vector<const class Book*>& results);
     void displayBookDetails(Book* book);
 
 public:
-    // Constructor
+    // 构造函数
     MenuHandler(BookManager& bm, MemberManager& mm,
                 TransactionManager& tm, ReservationManager& rsm,
                 RecommendationManager& rcm, UI& ui);
 
-    // Destructor
+    // 析构函数
     ~MenuHandler();
 
     bool login();
@@ -128,7 +128,7 @@ public:
     void exit();
     bool isApplicationRunning() const;
 
-    // Get current logged-in user
+    // 获取当前登录用户
     Member* getCurrentUser() const;
 };
 

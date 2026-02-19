@@ -1,4 +1,4 @@
-// MemberManager.cpp Implementation
+// MemberManager.cpp 实现
 
 #include "MemberManager.h"
 #include "../utils/FileHandler.h"
@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <iostream>
 
-// Constructor
+// 构造函数
 MemberManager::MemberManager(const std::string& filePath)
     : filePath(filePath), fileHandler() {
 
@@ -20,7 +20,7 @@ MemberManager::MemberManager(const std::string& filePath)
     loadFromFile();
 }
 
-// private: Helper: Load members data from file
+// 私有: 助手: 从文件加载成员数据
 void MemberManager::loadFromFile() {
     members.clear();
 
@@ -39,13 +39,13 @@ void MemberManager::loadFromFile() {
     }
 }
 
-// private: Helper: Save members data to file
+// 私有: 助手: 将成员数据保存到文件
 void MemberManager::saveToFile() {
     std::vector<std::string> lines;
 
     lines.emplace_back("MemberID,Name,PhoneNumber,Preference,RegistrationDate,ExpiryDate,MaxBooksAllowed,isAdmin,PasswordHash");
 
-    // Add all members
+    // 添加所有会员
     for (const auto& member : members) {
         lines.push_back(member.toCSV());
     }
@@ -57,14 +57,14 @@ void MemberManager::saveToFile() {
     }
 }
 
-// private: Helper: Check autoSave flag to decide whether need to save
+// 私有: 辅助: 检查自动保存标志决定是否需要保存
 void MemberManager::saveIfNeeded() {
     if (autoSave) {
         saveToFile();
     }
 }
 
-// Add a new Member
+// 新增一位会员
 bool MemberManager::addMember(const Member& member) {
     // Check if MemberID already exists
     if (isMemberIDExists(member.getMemberID())) {
@@ -75,7 +75,7 @@ bool MemberManager::addMember(const Member& member) {
     return true;
 }
 
-// Delete Member by MemberID
+// 以 MemberID 删除一位会员
 bool MemberManager::deleteMember(const std::string& MemberID) {
     auto it = std::find_if(members.begin(), members.end(),
         [&](const Member& member) { return member.getMemberID() == MemberID; });
@@ -88,7 +88,7 @@ bool MemberManager::deleteMember(const std::string& MemberID) {
     return false;
 }
 
-// Update existing book
+// 更新现有会员
 bool MemberManager::updateMember(const Member& member) {
     Member *existingMember = findMemberByID(member.getMemberID());
 
@@ -100,7 +100,7 @@ bool MemberManager::updateMember(const Member& member) {
     return true;
 }
 
-// Find member by MemberID
+// 以 MemberID 查找一位会员
 Member* MemberManager::findMemberByID(const std::string &MemberID) {
     for (auto& member : members) {
         if (member.getMemberID() == MemberID) {
@@ -110,9 +110,9 @@ Member* MemberManager::findMemberByID(const std::string &MemberID) {
     return nullptr;
 }
 
-// Find members Template
-// matchMode = 0 --> exact matching (case-sensitive) (default)
-// matchMode = 1 --> fuzzy matching (case-insensitive)
+// 会员查找模板
+// matchMode = 0 --> 精确匹配 (区分大小写) (默认)
+// matchMode = 1 --> 模糊匹配 (统一大小写)
 template<typename Getter>
 std::vector<const Member*> findByField(
     const std::vector<Member>& members,
@@ -121,7 +121,7 @@ std::vector<const Member*> findByField(
     int matchMode = 0
     ) {
         if (matchMode != 0 && matchMode != 1) {
-            throw std::runtime_error("Invalid match mode");
+            throw std::runtime_error("匹配码无效");
         }
 
         std::vector<const Member*> results;
@@ -148,26 +148,27 @@ std::vector<const Member*> findByField(
         return results;
 }
 
-// Find member by name
+// 以姓名查找一位会员
 std::vector<const Member*> MemberManager::findByName(const std::string& name, int matchMode) const {
     return findByField(members, name, &Member::getName , matchMode);
 }
 
-// Find member by author
+// 以手机号码查找一位会员
 std::vector<const Member*> MemberManager::findByPhoneNumber(const std::string& phoneNumber, int matchMode) const {
     return findByField(members, phoneNumber, &Member::getPhoneNumber, matchMode);
 }
 
-// Find member by registration date
+// 以注册日期查找一位会员
 std::vector<const Member*> MemberManager::findByRegistrationDate(const std::string& registrationDate, int matchMode) const {
     return findByField(members, registrationDate, &Member::getRegistrationDate, matchMode);
 }
 
+// 以过期日期查找一位会员
 std::vector<const Member*> MemberManager::findByExpiryDate(const std::string& expiryDate, int matchMode) const {
     return findByField(members, expiryDate, &Member::getExpiryDate, matchMode);
 }
 
-// Find admins
+// 查找管理员
 std::vector<const Member*> MemberManager::findAdmins() const {
     std::vector<const Member*> results;
 
@@ -179,7 +180,7 @@ std::vector<const Member*> MemberManager::findAdmins() const {
     return results;
 }
 
-// Authentication
+// 验证
 Member* MemberManager::authenticateUser(const std::string& memberID, const std::string& password) {
     Member *toBeVerifiedMember = findMemberByID(memberID);
 
@@ -193,17 +194,17 @@ Member* MemberManager::authenticateUser(const std::string& memberID, const std::
     return nullptr;
 }
 
-// Get all members
+// 获取所有会员
 const std::vector<Member>& MemberManager::getAllMembers() const {
     return members;
 }
 
-// Get total number of members
+// 获取会员总数
 int MemberManager::getTotalMembers() const {
     return static_cast<int>(members.size());
 }
 
-// Get count of admin members
+// 获取管理员总数
 int MemberManager::getAdminCount() const {
     int count = 0;
     for (const auto& member : members) {
@@ -214,23 +215,23 @@ int MemberManager::getAdminCount() const {
     return count;
 }
 
-// Reload from file
+// 重新加载文件
 void MemberManager::reload() {
     loadFromFile();
 }
 
-// Clear file handler cache
+// 清除文件处理器缓存
 void MemberManager::clearCache() {
     fileHandler.clearCache();
 }
 
-// Check if MemberID exists
+// 检查 MemberID 是否存在
 bool MemberManager::isMemberIDExists(const std::string& memberID) const {
     return std::find_if(members.begin(), members.end(),
         [&](const Member& member) { return member.getMemberID() == memberID; }) != members.end();
 }
 
-// Batch Operations (RAII)
+// 批量操作 (RAII)
 void MemberManager::setAutoSave(bool enable) {
     autoSave = enable;
 }
@@ -259,7 +260,7 @@ MemberManager::BatchOperation::~BatchOperation() {
         memberManager->saveToFile();
         memberManager->setAutoSave(originalAutoSave);
     } catch (...) {
-        std::cerr << "Error when trying to save members during batch operations." << std::endl;
+        std::cerr << "在批量操作中尝试保存会员时出错" << std::endl;
     }
 }
 

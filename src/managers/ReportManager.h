@@ -14,16 +14,16 @@ private:
     MemberManager memberManager;
     TransactionManager transactionManager;
     ReservationManager reservationManager;
-    std::string reportsDir;                 // Report Output Directory
+    std::string reportsDir;                 // 报告输出目录
 
-    // Splicing path
+    // 拼接路径
     std::string joinPath(const std::string& dir, const std::string& file) const;
-    // Construct report file name
+    // 构造报告文件名
     std::string buildReportFileName(const std::string& prefix) const;
-    // Write text lines
+    // 写入文本行
     bool writeLines(const std::string& filePath, const std::vector<std::string>& lines) const;
 
-    // Builders
+    // 构建器
     std::vector<std::string> buildSummaryReport() const;
     std::vector<std::string> buildInventoryReport() const;
     std::vector<std::string> buildMemberReport() const;
@@ -39,10 +39,10 @@ public:
         const std::string& reservationPath = "../data/reservations.csv",
         const std::string& reportsDirectory = "../reports");
 
-    // Reload all datas
+    // 重新加载所有数据
     void reloadAll();
 
-    // Generators
+    // 生成器
     bool generateSummaryReport(bool reload = true);
     bool generateInventoryReport(bool reload = true);
     bool generateMemberReport(bool reload = true);

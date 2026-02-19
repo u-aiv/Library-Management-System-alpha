@@ -12,31 +12,31 @@ private:
     std::string filePath;
     FileHandler fileHandler;
 
-    // Data Persistence
-    // Helper: Load Members data from file
+    // 数据持久化
+    // 助手: 从文件中加载会员数据
     void loadFromFile();
 
-    // Helper: Save Members data to file
+    // 助手: 将会员数据保存到文件
     void saveToFile();
 
-    // For Batch Operations
+    // 用于批量操作
     bool autoSave = true;
     void setAutoSave(bool enable = true);
     bool isAutoSaveEnabled() const;
 
-    // Helper: Check autoSave flag to decide whether need to save
+    // 助手: 检查自动保存标志决定是否需要保存
     void saveIfNeeded();
 
 public:
-    // Constructor
+    // 构造函数
     explicit MemberManager(const std::string& filePath = "../data/members.csv");
     
-    // CRUD (Create, Read, Update, Delete)
+    // CRUD操作 (增删查改)
     bool addMember(const Member& member);
     bool updateMember(const Member& member);
     bool deleteMember(const std::string& memberID);
     
-    // Search Functions
+    // 查找函数
     Member* findMemberByID(const std::string &memberID);
     std::vector<const Member*> findByName(const std::string& name, int matchMode = 0) const;
     std::vector<const Member*> findByPhoneNumber(const std::string& phoneNumber, int matchMode = 0) const;
@@ -44,20 +44,20 @@ public:
     std::vector<const Member*> findByExpiryDate(const std::string& expiryDate, int matchMode = 0) const;
     std::vector<const Member*> findAdmins() const;
 
-    // Authentication
+    // 验证
     Member* authenticateUser(const std::string& memberID, const std::string& password);
 
-    // Getters
+    // 获取器
     const std::vector<Member> &getAllMembers() const;
     int getTotalMembers() const;
     int getAdminCount() const;
 
-    // Utility
-    void reload();          // Reload from file
-    void clearCache();      // Clear file handler cache
+    // 实用方法
+    void reload();          // 重新加载文件
+    void clearCache();      // 清除文件处理器缓存
     bool isMemberIDExists(const std::string& memberID) const;
 
-    // Batch Operation (RAII)
+    // 批量操作 (RAII)
     class BatchOperation {
     private:
         MemberManager* memberManager;

@@ -5,18 +5,18 @@
 
 class Transaction {
 private:
-    std::string transactionID;      // Transaction ID (auto generated)
-    std::string userID;             // User's ID
-    std::string isbn;               // Book's ISBN
-    std::string borrowDate;         // Borrow Date (YYYY-MM-DD)
-    std::string dueDate;            // Due Date (YYYY-MM-DD)
-    std::string returnDate;         // Returned Date (YYYY-MM-DD)
-    int renewCount{};               // The count of renewal
-    double fine{};                  // The amount of fine
-    bool isReturned{};              // true = Returned, false = Unreturned
+    std::string transactionID;      // 交易 ID
+    std::string userID;             // 用户 ID
+    std::string isbn;               // 书目 ISBN
+    std::string borrowDate;         // 借阅日期 (YYYY-MM-DD)
+    std::string dueDate;            // 逾期日期 (YYYY-MM-DD)
+    std::string returnDate;         // 归还日期 (YYYY-MM-DD)
+    int renewCount{};               // 续约次数
+    double fine{};                  // 罚款金额
+    bool isReturned{};              // true = 已归还, false = 未归还
 
 public:
-    // Constructor
+    // 构造函数
     Transaction(std::string transactionID, std::string userID, std::string isbn,
                 std::string borrowDate, std::string dueDate, std::string returnDate,
                 int renewCount = 0, double fine = 0.0, bool isReturned = false):
@@ -26,7 +26,7 @@ public:
                 renewCount(renewCount), fine(fine), isReturned(isReturned){}
     Transaction() = default;
 
-    // Getters and Setters
+    // 获取器和设置器
     std::string getTransactionID() const;
     std::string getUserID() const;
     std::string getISBN() const;
@@ -37,14 +37,14 @@ public:
     double getFine() const;
     bool haveReturned() const;
 
-    // Business Logic Methods
+    // 业务逻辑
     bool isOverdue() const;
     double calculateFine() const;
     bool canRenew() const;
     void renewBook();
     void returnBook();
 
-    // Utility
+    // 实用方法
     std::string toCSV() const;
     static Transaction fromCSV(const std::string& csvLine);
 };

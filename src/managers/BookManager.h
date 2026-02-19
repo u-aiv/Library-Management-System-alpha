@@ -12,32 +12,32 @@ private:
     std::string filePath;
     FileHandler fileHandler;
 
-    // Data Persistence
-    // Helper: Load books data from file
+    // 数据持久化
+    // 助手：从文件中加载书籍数据
     void loadFromFile();
 
-    // Helper: Save books data to file
+    // 助手：向文件中保存书籍数据
     void saveToFile();
 
-    // For Batch Operations
+    // 用于批量操作
     bool autoSave = true;
     void setAutoSave(bool enable = true);
     bool isAutoSaveEnabled() const;
 
-    // Helper: Check autoSave flag to decide whether need to save
+    // 助手：检查自动保存标志决定是否需要保存
     void saveIfNeeded();
 
 
 public:
-    // Constructor
+    // 构造函数
     explicit BookManager(const std::string& filePath = "../data/books.csv");
 
-    // CRUD (Create, Read, Update, Delete)
+    // CRUD 操作 (增删查改)
     bool addBook(const Book& book);
     bool updateBook(const Book& book);
     bool deleteBook(const std::string& isbn);
 
-    // Search Functions
+    // 搜索函数
     Book* findBookByISBN(const std::string &isbn);
     std::vector<const Book*> findByTitle(const std::string& title, int matchMode = 0) const;
     std::vector<const Book*> findByAuthor(const std::string& author, int matchMode = 0) const;
@@ -45,22 +45,22 @@ public:
     std::vector<const Book*> findByGenre(const std::string& genre, int matchMode = 0) const;
     std::vector<const Book*> findAvailableBooks() const;
 
-    // Borrow / Return Operations
+    // 借/还操作
     bool borrowBook(const std::string& isbn);
     bool returnBook(const std::string& isbn);
 
-    // Getters
+    // 获取器
     std::vector<Book> getAllBooks() const;
     int getTotalBooks() const;
     int getAvailableCount() const;
     // std::vector<Book*> getAvailableBooks() const;
 
-    // Utility
-    void reload();          // Reload from file
-    void clearCache();      // Clear file handler cache
+    // 实用方法
+    void reload();          // 重新加载文件
+    void clearCache();      // 清除文件处理器缓存
     bool isISBNExists(const std::string& isbn) const;
 
-    // Batch Operation (RAII)
+    // 批量操作 (RAII)
     class BatchOperation {
     private:
         BookManager* bookManager;

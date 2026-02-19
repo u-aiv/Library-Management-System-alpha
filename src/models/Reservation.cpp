@@ -1,4 +1,4 @@
-// Reservation.h Instance
+// Reservation.h 实现
 
 #include "Reservation.h"
 #include <sstream>
