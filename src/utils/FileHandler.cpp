@@ -1,4 +1,4 @@
-// FileHandler.h Instance
+// FileHandler.h 实现
 
 #include "FileHandler.h"
 #include <fstream>
@@ -21,7 +21,7 @@ std::vector<std::string> FileHandler::readCSV(const std::string& filePath) {
 
     std::ifstream ifs(filePath);
     if (!ifs.is_open()) {
-        throw std::runtime_error ("Error opening file: " + filePath);
+        throw std::runtime_error ("打开文件错误: " + filePath);
     }
     std::vector<std::string> lines;
     std::string line;
@@ -37,7 +37,7 @@ std::vector<std::string> FileHandler::readCSV(const std::string& filePath) {
 void FileHandler::writeCSV(const std::string& filePath, const std::vector<std::string>& lines) {
     std::ofstream ofs(filePath);
     if (!ofs.is_open()) {
-        throw std::runtime_error ("Error opening file: " + filePath);
+        throw std::runtime_error ("打开文件错误: " + filePath);
     }
     for (const auto& line : lines) {
         ofs << line << "\n";
@@ -59,7 +59,7 @@ void FileHandler::createFileIfNotExist(const std::string& filePath) {
     if (isFileExist(filePath)) return;
     std::ofstream ofs(filePath);
     if (!ofs.is_open()) {
-        throw std::runtime_error ("Error opening file: " + filePath);
+        throw std::runtime_error ("打开文件错误: " + filePath);
     }
 }
 
@@ -74,7 +74,7 @@ void FileHandler::clearCache(const std::string& filePath) {
 bool FileHandler::createDirectory(const std::string& filePath) {
 #ifdef _WIN32
     std::string path = filePath;
-    // Normalize separators to backslash
+    // 将分隔符规范化为反斜杠
     for (size_t i = 0; i < path.size(); i++) {
         if (path[i] == '/') path[i] = '\\';
     }

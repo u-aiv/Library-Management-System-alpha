@@ -1,4 +1,4 @@
-// DateUtils.h Instance
+// DateUtils.h 实现
 
 #include "DateUtils.h"
 #include <ctime>
@@ -12,7 +12,7 @@ namespace DateUtils {
         int day = 0;
 
         if (std::sscanf(dateString.c_str(), "%d-%d-%d", &year, &month, &day) != 3) {
-            return 0;                       // Returns 0 if parsing fails, and the caller will get 1970-01-01
+            return 0;                       // 解析失败时返回 0, 调用者将得到 1970-01-01
         }
         std::tm tm = {};
         tm.tm_year = year - 1900;
@@ -52,8 +52,8 @@ namespace DateUtils {
 
     unsigned int daysBetween(time_t startTimestamp, time_t endTimestamp) {
         time_t incrementTimestamp = endTimestamp - startTimestamp;
-        // The maximum year corresponding to INT is 2038, while
-        // the maximum year corresponding to UNSIGNED INT is 2106.
+        // 用 INT 表示的最大年份到 2038, 但是
+        // 用 UNSIGNED INT 表示的最大年份到 2106
         return static_cast<unsigned int>(incrementTimestamp) / 86400;
     }
 
